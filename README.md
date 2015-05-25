@@ -11,4 +11,4 @@ This project include:
 
 
 For testing purposes, I've added some basic functionality in baseViewController and in each other child VC.
-* Mixing old autoresize with autolayout in StoryBoard
+* Mixing old autoresize and xib with autolayout in StoryBoard
