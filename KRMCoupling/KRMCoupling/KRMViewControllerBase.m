@@ -9,6 +9,7 @@
 #import "KRMViewControllerBase.h"
 
 @interface KRMViewControllerBase ()
+@property (strong, nonatomic) IBOutlet UIView *baseView;
 
 @end
 
@@ -20,7 +21,8 @@
   // some additional logic
   [self setupButtons];
 }
-#pragma mark - Init
+#pragma mark - LOGIC GOES HERE
+#pragma mark Init view elements
 -(void) setupButtons {
   self.buttonBack.hidden = ([self.navigationController.viewControllers count] > 1) ? NO : YES;
   //fake loader
@@ -45,34 +47,29 @@
   }
 }
 
-#pragma mark - Private
+#pragma mark - PRIVATE
 - (void)addSubviewsFromNib
 {
+  //saving current view
   UIView *selfView = self.view;
   UIView *nibView;
   @try {
+    // override currrent view from nib
     nibView = [[NSBundle.mainBundle loadNibNamed:NSStringFromClass([self superclass])
                                            owner:self
                                          options:nil] firstObject];
   }
   @catch (NSException *exception) {
-    NSAssert(NO, @"Error while loading base nib");
+    NSLog(@"Error while loading base nib");
+    return;
   }
-  //NSArray *viewConstraints = [self.view constraints];
-
+  //return our current view and and newly added nibview
   self.view = selfView;
-  NSMutableArray *viewList = [NSMutableArray new];
-  for (UIView *view in nibView.subviews) {
-    [viewList addObject:view];
-  }
-  // reverse views to because we got them last first
-  NSArray *reversed = [[[viewList reverseObjectEnumerator] allObjects] copy];
-  for (UIView *view in reversed) {
-    [self.view addSubview:view];
-    [self.view sendSubviewToBack:view];
-  }
-  //TODO: FIX CONSTRAINS LOADING
-  //[self.view addConstraints:viewConstraints];
+  nibView.frame = self.view.frame;
+  [self.view addSubview:nibView];
+  [self.view sendSubviewToBack:self.baseView];
+  //send whole nibView back if you need
+  //[self.view sendSubviewToBack:nibView];
 }
 
 
